@@ -85,6 +85,10 @@ async function main() {
       console.log(`📂 Criando app ${appName} a partir de ${type}...`);
       fs.copySync(src, dest);
 
+      const pkgPath = path.join(dest, "package.json");
+      const pkg = fs.readJsonSync(pkgPath);
+      pkg.name = appName;
+
       createdApps.push(appName);
     }
   }
