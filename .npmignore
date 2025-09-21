@@ -1,0 +1,13 @@
+coverage
+node_modules
+tests
+.vscode
+.editorconfig
+.eslintrc.json
+.gitignore
+.npmignore
+.prettierignore
+.prettierrc
+jest.config.ts
+package-lock.json
+tsconfig.json

@@ -1,0 +1,40 @@
+{
+  "name": "create-monorepo-cli",
+  "author": "peal-26",
+  "description": "CLI para criação de monorepositorios JavaScript/TypeScript com suporte a múltiplos apps (Next.js, Expo, NestJS) e pacotes compartilhados já pré-configurados (eslint, prettier, tsconfig, ui, hooks, etc.).",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "create-monorepo": "bin/create-monorepo.js"
+  },
+  "dependencies": {
+    "inquirer": "^9.0.0",
+    "execa": "^8.0.0",
+    "fs-extra": "^11.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PEAL-26/create-monorepo-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PEAL-26/create-monorepo-cli/issues"
+  },
+  "homepage": "https://github.com/PEAL-26/create-monorepo-cli#readme",
+  "keywords": [
+    "monorepo",
+    "cli",
+    "javascript",
+    "typescript",
+    "nextjs",
+    "react",
+    "react-native",
+    "expo",
+    "nestjs",
+    "turborepo",
+    "workspaces",
+    "eslint",
+    "prettier",
+    "boilerplate",
+    "generator"
+  ]
+}
