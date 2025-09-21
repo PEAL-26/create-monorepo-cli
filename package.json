@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "type": "module",
   "bin": {
-    "create-monorepo": "bin/create-monorepo.js"
+    "create-monorepo-turbo": "bin/create-monorepo.js"
   },
   "scripts": {
     "publish": "npm publish",
