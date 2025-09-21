@@ -88,7 +88,8 @@ async function main() {
       const pkgPath = path.join(dest, "package.json");
       const pkg = fs.readJsonSync(pkgPath);
       pkg.name = appName;
-
+      fs.writeJsonSync(pkgPath, pkg, { spaces: 2 });
+      
       createdApps.push(appName);
     }
   }
