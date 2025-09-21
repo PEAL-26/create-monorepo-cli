@@ -2,7 +2,7 @@
   "name": "create-monorepo-turbo",
   "author": "peal-26",
   "description": "CLI para criação de monorepositorios JavaScript/TypeScript com suporte a múltiplos apps (Next.js, Expo, NestJS) e pacotes compartilhados já pré-configurados (eslint, prettier, tsconfig, ui, hooks, etc.).",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "bin": {
     "create-monorepo-turbo": "bin/create-monorepo.js"
