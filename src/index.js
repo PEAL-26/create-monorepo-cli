@@ -108,7 +108,9 @@ async function main() {
   fs.writeJsonSync(pkgPath, pkg, { spaces: 2 });
 
   console.log("📦 Instalando dependências...");
- await execa("npm", ["install"], { cwd: rootDir, stdio: "inherit" });
+  fs.removeSync(path.join(rootDir, "package-lock.json"));
+  await execa("npm", ["install"], { cwd: rootDir, stdio: "inherit" });
+  await execa("git", ["init"]);
 
   console.log("\n✅ Monorepo configurado com sucesso!");
   console.log(`📂 Local: ${rootDir}`);
