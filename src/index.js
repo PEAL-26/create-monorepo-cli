@@ -3,14 +3,19 @@ import inquirer from "inquirer";
 import { execa } from "execa";
 import fs from "fs-extra";
 import path from "path";
+import { sanitizeAppName } from "./utils.js";
+
+const FOLDER_BASE = "__base";
 
 async function main() {
   console.log("🚀 Criador de Monorepo");
 
   // Nome do monorepo
-  const { monorepoName } = await inquirer.prompt([
-    { type: "input", name: "monorepoName", message: "Nome do monorepo:" }
+  const { monorepoNameInput } = await inquirer.prompt([
+    { type: "input", name: "monorepoNameInput", message: "Nome do monorepo:" },
   ]);
+
+  const monorepoName = sanitizeAppName(monorepoNameInput);
 
   const rootDir = path.join(process.cwd(), monorepoName);
 
@@ -20,18 +25,27 @@ async function main() {
     "--depth",
     "1",
     "https://github.com/peal-26/monorepo-template.git",
-    rootDir
+    rootDir,
   ]);
 
   fs.removeSync(path.join(rootDir, ".git"));
 
   const appsDir = path.join(rootDir, "apps");
+  const baseDir = path.join(appsDir, FOLDER_BASE);
+
+  for (const dir of ["api", "mobile", "web"]) {
+    const folderSource = path.join(appsDir, dir);
+    const folderDest = path.join(baseDir, dir);
+    if (!fs.existsSync(folderSource)) continue;
+
+    fs.moveSync(folderSource, folderDest, { overwrite: true });
+  }
 
   // Tipos de apps disponíveis
   const appTypes = [
-    { name: "Next.js (web)", value: "_web" },
-    { name: "Expo (mobile)", value: "_mobile" },
-    { name: "NestJS (api)", value: "_api" }
+    { name: "Next.js (web)", value: "web" },
+    { name: "Expo (mobile)", value: "mobile" },
+    { name: "NestJS (api)", value: "api" },
   ];
 
   const { selectedTypes } = await inquirer.prompt([
@@ -39,47 +53,72 @@ async function main() {
       type: "checkbox",
       name: "selectedTypes",
       message: "Quais tipos de apps deseja criar?",
-      choices: appTypes
-    }
+      choices: appTypes,
+    },
   ]);
+
+  const createdApps = [];
 
   for (const type of selectedTypes) {
     const { count } = await inquirer.prompt([
       {
         type: "number",
         name: "count",
-        message: `Quantos apps do tipo ${type.replace("_", "")} deseja criar?`,
-        default: 1
-      }
+        message: `Quantos apps do tipo ${type} deseja criar?`,
+        default: 1,
+      },
     ]);
 
     for (let i = 0; i < count; i++) {
-      const { appName } = await inquirer.prompt([
+      const { appNameInput } = await inquirer.prompt([
         {
           type: "input",
-          name: "appName",
-          message: `Nome do app #${i + 1} (${type.replace("_", "")}):`
-        }
+          name: "appNameInput",
+          message: `Nome do app #${i + 1} (${type}):`,
+        },
       ]);
 
-      const src = path.join(appsDir, type);
+      const appName = sanitizeAppName(appNameInput);
+      const src = path.join(baseDir, type);
       const dest = path.join(appsDir, appName);
 
       console.log(`📂 Criando app ${appName} a partir de ${type}...`);
       fs.copySync(src, dest);
+
+      createdApps.push(appName);
     }
   }
 
-  // Remove templates base (_web, _mobile, _api)
-  for (const type of appTypes.map(t => t.value)) {
-    fs.removeSync(path.join(appsDir, type));
+  fs.removeSync(baseDir);
+
+  const pkgPath = path.join(rootDir, "package.json");
+  const pkg = fs.readJsonSync(pkgPath);
+
+  pkg.name = monorepoName;
+
+  if (!pkg.scripts) pkg.scripts = {};
+
+  for (const app of createdApps) {
+    pkg.scripts[`build:${app}`] = `turbo run build --filter=${app}`;
+    pkg.scripts[`dev:${app}`] = `turbo run dev --filter=${app}`;
+    pkg.scripts[`start:${app}`] = `turbo run start --filter=${app}`;
+    pkg.scripts[`format:${app}`] = `turbo run format --filter=${app}`;
   }
+
+  fs.writeJsonSync(pkgPath, pkg, { spaces: 2 });
+
+  console.log("📦 Instalando dependências...");
+ // await execa("npm", ["install"], { cwd: rootDir, stdio: "inherit" });
 
   console.log("\n✅ Monorepo configurado com sucesso!");
   console.log(`📂 Local: ${rootDir}`);
+  console.log("👉 Agora você pode rodar:");
+  createdApps.forEach((app) => {
+    console.log(`   - npm run dev:${app}`);
+  });
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
