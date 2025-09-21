@@ -89,7 +89,7 @@ async function main() {
       const pkg = fs.readJsonSync(pkgPath);
       pkg.name = appName;
       fs.writeJsonSync(pkgPath, pkg, { spaces: 2 });
-      
+
       createdApps.push(appName);
     }
   }
@@ -115,7 +115,7 @@ async function main() {
   console.log("📦 Instalando dependências...");
   fs.removeSync(path.join(rootDir, "package-lock.json"));
   await execa("npm", ["install"], { cwd: rootDir, stdio: "inherit" });
-  await execa("git", ["init"]);
+  await execa("git", ["init"], { cwd: rootDir, stdio: "inherit" });
 
   console.log("\n✅ Monorepo configurado com sucesso!");
   console.log(`📂 Local: ${rootDir}`);
