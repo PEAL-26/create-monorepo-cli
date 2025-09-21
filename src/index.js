@@ -108,7 +108,7 @@ async function main() {
   fs.writeJsonSync(pkgPath, pkg, { spaces: 2 });
 
   console.log("📦 Instalando dependências...");
- // await execa("npm", ["install"], { cwd: rootDir, stdio: "inherit" });
+ await execa("npm", ["install"], { cwd: rootDir, stdio: "inherit" });
 
   console.log("\n✅ Monorepo configurado com sucesso!");
   console.log(`📂 Local: ${rootDir}`);
