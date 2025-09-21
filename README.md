@@ -1,4 +1,4 @@
-# 📦 create-monorepo-cli
+# 📦 create-monorepo-turbo
 
 CLI para criação de monorepositórios modernos com suporte a múltiplos aplicativos (Next.js, Expo, NestJS) e pacotes compartilhados já pré-configurados (eslint, prettier, tsconfig, jest, ui, hooks, helpers, etc.).
 
