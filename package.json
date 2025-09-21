@@ -7,6 +7,10 @@
   "bin": {
     "create-monorepo": "bin/create-monorepo.js"
   },
+  "scripts": {
+    "publish": "npm publish",
+    "patch": "npm version patch"
+  },
   "dependencies": {
     "inquirer": "^9.0.0",
     "execa": "^8.0.0",
